@@ -182,10 +182,15 @@ Pertama kita melakukan input melalui argumen pada terminal, pada c kita menambah
 5) /home/somi/test.sh adalah isi dari argv[4]
 kemudian  dilakukan pengecekan pertama untuk yang nomor 1) yaitu jika argumen-1 yang diberikan > 4 atau argumen-1 yang diberikan < 4 maka akan mencetak "Terjadi kesalahan input", argc -1 kami anggap dikurangi dengan ./program nya.
 Ketika program program sukses melewati pengecekan pertama lalu lanjut ke :
+
 1 ) pengecekan kedua ( pada no 2) ) yaitu  melakukan cek ke argumen ke 1 (bagian detik) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 59 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "59" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 59) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 1".
+
 2 ) pengecekan ketiga ( pada no 3) ) dengan syarat pengecekan kedua berhasil, yaitu  melakukan cek ke argumen ke 2 (bagian menit) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 59 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "59" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 59) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 2".
+
 3 ) pengecekan keempat ( pada no 4) ) dengan syarat pengecekan ketiga berhasil, yaitu  melakukan cek ke argumen ke 3 (bagian jam) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 23 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "23" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 23) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 3".
-4 ) Ketika argumen ke 1, 2, dan 3 mendapat input huruf atau kata sudah pasti gagal karena ascii minimum untuk huruf kecil adalah 97 dan huruf besar 65 ( otomatis melebihi ) sedangkan maksimum hanya 59. 
+
+4 ) Ketika argumen ke 1, 2, dan 3 mendapat input huruf atau kata sudah pasti gagal karena ascii minimum untuk huruf kecil adalah 97 dan huruf besar 65 ( otomatis melebihi ) sedangkan maksimum hanya 59.
+
 5 ) pengecekan terakhir ( pada no 5) ) dengan syarat pengecekan keempat berhasil, yaitu melakukan cek ke argumen ke 4 (bagian path) dengan kondisi input akan dipassing pada fungsi :
 ```c
 pattern_check(argv[4]) //isinya
@@ -200,6 +205,7 @@ pattern_check(char *paths){
 }
 ```
 kami menggunakan FILE *file default
+
 **Screenshot Run :** 
 <hr>
 
