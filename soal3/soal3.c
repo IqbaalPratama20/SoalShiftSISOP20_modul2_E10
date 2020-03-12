@@ -8,11 +8,6 @@
 
 #include <sys/stat.h>
 
-int is_file(const char* path) {
-    struct stat buf;
-    stat(path, &buf);
-    return S_ISREG(buf.st_mode);
-}
 
 int is_dir(const char* path) {
     struct stat buf;
@@ -104,8 +99,53 @@ int main() {
                     }
                     if(is_dir(temp))
                     {
-                        char *argss[] = {"mv", temp, "/home/iqbaal/praktikum2/indomie/", NULL};
-                        subv("/bin/mv", argss); 
+                        pid_t next_childs;
+                        int next_status;
+                        next_childs = fork();
+                        if (next_childs < 0)
+                        {
+                            exit(EXIT_FAILURE);
+                        }
+
+                        if(next_childs == 0)
+                        {
+                            char *argss[] = {"mv", temp, "/home/iqbaal/praktikum2/indomie/", NULL};
+                            subv("/bin/mv", argss);
+                        }
+                        else
+                        {
+                            while(wait(&next_status) > 0);
+                            pid_t next_gen_childs;
+                            int next_gen_status;
+                            char aa[50];
+                            strcpy(aa,"/home/iqbaal/praktikum2/indomie/");
+                            strcat(aa, de->d_name);
+                            strcat(aa,"/coba1.txt");
+                            char bb[50];
+                            strcpy(bb,"/home/iqbaal/praktikum2/indomie/");
+                            strcat(bb, de->d_name);
+                            strcat(bb,"/coba2.txt");
+
+                            next_gen_childs = fork();
+
+                            if (next_gen_childs < 0)
+                            {
+                                exit(EXIT_FAILURE);
+                            }
+
+                            if(next_gen_childs == 0)
+                            {
+                                char *argss[] = {"touch", aa, NULL};
+                                execv("/bin/touch", argss);
+                            }
+                            else
+                            {
+                                while(wait(&next_gen_status) > 0);
+                                sleep(3);
+                                char *argss[] = {"touch", bb, NULL};
+                                execv("/bin/touch", argss);
+                            } 
+                        }
                     }
                     else
                     {
