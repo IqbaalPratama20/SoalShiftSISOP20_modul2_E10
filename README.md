@@ -77,7 +77,7 @@ void service_maker(char * second, char * minutes, char * hour, char * path_file)
                     subv("/bin/bash", args);
                 }
             }
-            else if(strcmp(skrg_menit, minutes))
+            else if(strcmp(skrg_menit, minutes)==0)
             {
                 if(strcmp(second, "*")==0)
                 {
@@ -234,7 +234,7 @@ void service_maker(char * second, char * minutes, char * hour, char * path_file)
                     subv("/bin/bash", args);
                 }
             }
-            else if(strcmp(skrg_menit, minutes))
+            else if(strcmp(skrg_menit, minutes)==0)
             {
                 if(strcmp(second, "*")==0)
                 {
@@ -305,6 +305,87 @@ Kode diatas yaitu menggunakan while karena program yang dibuat ini seperti cront
         sprintf(skrg_detik, "%d", tm_info->tm_sec);
 ```
 digunakan untuk mengubah masing-masing nilai integer jam,menit,detik pada struct ``*tm_info`` ke ``string skrg_jam``, ``skrg_menit`` dan ``skrg_detik`` menggunakan bantuan fungsi ``sprintf``
+
+```c
+if( strcmp(hour, "*")==0)
+        {
+            if(strcmp(minutes,"*") == 0)
+            {
+                if(strcmp(second,"*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik, second)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+            }
+            else if(strcmp(skrg_menit, minutes)==0)
+            {
+                if(strcmp(second, "*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik,second)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+            }
+        }
+	else if( strcmp(hour,skrg_jam)==0)
+        {
+            if(strcmp(minutes,"*") == 0)
+            {
+                if(strcmp(second,"*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik,path_file)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+            }
+            else if(strcmp(skrg_menit, minutes)==0)
+            {
+                if(strcmp(second,"*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik,second)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+             }
+        }   
+```
+Kode tersebut digunakan untuk mengecek apakah argumen ketiga (hour) yang dimasukkan merupakan ``*`` atau sama dengan jam waktu saat itu yang ada di string ``skrg_jam``, kemudian dilakukan lagi pengecekan apakah argumen kedua (minutes) yang dimasukkan merupakan ``*`` atau sama dengan menit waktu saat itu yang ada di string ``skrg_menit``. Setelah itu dilakukan pengecekan lagi apakah argumen pertama (second) yang dimasukkan sama dengan ``*`` atau sama dengan menit waktu saat itu yang ada di string ``skrg_detik``. Jika memenuhi kondisi-kondisi tersebut akan dipanggil fungsi ``subv`` untuk mengeksekusi bash pada string path_file yang ada pada argumen terakhir inputan. 
+
+Di dalam program ini terdapat fungsi
+```c
+void subv(char *path, char * const argv[])
+{
+    int ret;
+    pid_t a_pid = fork();
+    if (a_pid == -1) return;
+    if (a_pid != 0) 
+    { 
+        wait(&ret); 
+        return; 
+    }
+    execv(path, argv);
+}
+```
+dimana fungsi subv dengan parameter string path dan argumen untuk digunakan nanti pada ``execv``. Fungsi ini sama dengan fungsi untuk membuat proses baru dimana saat pembuatan proses gagal ataupun proses masih ada di parent fungsi ini tidak mereturn apa apa. Secara default fungsi ini akan menjalankan ``execv`` dengan parameter string path serta argumen yang sudah dipassing di fungsi ini saat dipanggil
+
+
 
 kami menggunakan FILE *file default
 **Screenshot Run :** 
@@ -576,7 +657,7 @@ void subv(char *path, char * const argv[])
     execv(path, argv);
 }
 ```
-Yaitu fungsi subv dengan parameter string path dan argumen untuk digunakan nanti pada ``execv``. Fungsi ini sama dengan fungsi untuk membuat proses baru dimana saat pembuatan proses gagal ataupun proses masih ada di parent fungsi ini tidak mereturn apa apa. selain itu fungsi ini akan menjalankan ``execv`` dengan parameter string path serta argumen yang sudah dipassing di fungsi ini saat dipanggil
+Yaitu fungsi subv dengan parameter string path dan argumen untuk digunakan nanti pada ``execv``. Fungsi ini sama dengan fungsi untuk membuat proses baru dimana saat pembuatan proses gagal ataupun proses masih ada di parent fungsi ini tidak mereturn apa apa. Secara default fungsi ini akan menjalankan ``execv`` dengan parameter string path serta argumen yang sudah dipassing di fungsi ini saat dipanggil
 
 ```c
 while ((de = readdir(dr)) != NULL){ 
