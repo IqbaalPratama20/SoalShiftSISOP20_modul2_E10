@@ -270,7 +270,25 @@ int main() {
 ```
 
 **Penjelasan :**
+```c
+while ((de = readdir(dr)) != NULL){ 
+        char temp[100] = "\0";
+        strcpy(temp,"/home/iqbaal praktikum2/jpg/");
+        strcat(temp, de->d_name);
+```
+Perintah tersebut yaitu dilakukan perulangan dengan membaca semua setiap isi (file ataupun directory) dari directory jpg tersebut dan nama isi directory tersebut (file ataupun directory) akan ada di d_name pada struct de. Setelah itu dibuat string temp yang isinya path dari setiap isi directory jpg tersebut
 
+```c
+        char a[50];
+        char b[50];
+        strcpy(a, "/home/iqbaal/praktikum2/jpg/..");
+        strcpy(b, "/home/iqbaal/praktikum2/jpg/.");
+        if(strcmp(temp,a)==0 || strcmp(temp,b)==0)
+        {
+            continue;
+        }
+```
+Untuk kode tersebut dideklarasikan string a dan string b dimana string a ini memuat path ``/home/iqbaal/praktikum2/jpg/.`` dan ``/home/iqbaal/praktikum2/jpg/..`` dimana pada kedua directory tersebut dilakukan pengecualian sehingga tidak dilakukan apa-apa. Hal tersebut akan jalan ketika perbandingan antara string a atau b dengan string path temp bernilai 0, dilakukan ``continue`` agar langsung masuk ke perulangan selanjutnya
 
 **Screenshot Run :**
 <hr>
