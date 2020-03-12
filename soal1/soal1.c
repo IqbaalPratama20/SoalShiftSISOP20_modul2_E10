@@ -109,7 +109,7 @@ int pattern_check(char * paths){
 }
 
 int main(int argc, char **argv){
-    if (argc-1 > 4){
+    if (argc-1 > 4 || argc-1 < 4){
         printf("Terjadi kesalahan input\n");
     }else{
         if ( (strcmp(argv[1], "*") == 0) || (strcmp(argv[1], "0") >= 0 && strcmp(argv[1],"59") <= 0) ){
