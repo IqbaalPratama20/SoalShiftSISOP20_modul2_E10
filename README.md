@@ -196,7 +196,7 @@ Ketika program program sukses melewati pengecekan pertama lalu lanjut ke :
 ```c
 pattern_check(argv[4]) //isinya
 pattern_check(char *paths){
-	1) FILE *file;
+    1) FILE *file;
     2) if ((file = fopen(paths, "r")))
 	   {
     3)    fclose(file);
@@ -205,6 +205,7 @@ pattern_check(char *paths){
     5) return 0;
 }
 ```
+Pada fungsi tersebut digunakan struct file bertipe FILE lalu file tersebut diinisiasi dengan fopen (membuka) file dengan metode r (membaca saja atau bisa diganti yang lain). Ketika fopen sukses maka akan mengembalikan nilai 1 (true) sebaliknya ketika gagal akan mengembalikan nilai 0 atau false. Ketika mengembalikan nilai true berarti file itu ada, lalu file langsung di close dan fungsi mengembalikan nilai 1 sebagai bukti bahwa fopen sukses dan file tersebut ada. Setelah pengecekan terakhir ini sukses maka memanggil fungsi service_maker.
 Fungsi lain yang digunakan pada program ini yaitu fungsi service_maker yang akan dipanggil ketika semua argumen yang dimasukkan sesuai format
 ```c
 void service_maker(char * second, char * minutes, char * hour, char * path_file){
