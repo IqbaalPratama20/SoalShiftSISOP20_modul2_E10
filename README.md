@@ -135,7 +135,7 @@ int pattern_check(char * paths){
 }
 
 int main(int argc, char **argv){
-    if (argc-1 > 4){
+    if (argc-1 > 4 || argc-1 < 4){
         printf("Terjadi kesalahan input\n");
     }else{
         if ( (strcmp(argv[1], "*") == 0) || (strcmp(argv[1], "0") >= 0 && strcmp(argv[1],"59") <= 0) ){
@@ -160,10 +160,47 @@ int main(int argc, char **argv){
 }
 
 ```
-
 **Penjelasan :**
-
-**Screenshot Run :**
+```c
+int main(int argc, char **argv){
+    1) if (argc-1 > 4 || argc-1 < 4){
+        printf("Terjadi kesalahan input\n");
+    2) else{
+    3)   if ( (strcmp(argv[1], "*") == 0) || (strcmp(argv[1], "0") >= 0 && strcmp(argv[1],"59") <= 0) )
+    4)    if ( (strcmp(argv[2], "*") == 0) || (strcmp(argv[2], "0") >= 0 && strcmp(argv[2],"59") <= 0) )
+    5)     if ( (strcmp(argv[3], "*") == 0) || (strcmp(argv[3], "0") >= 0 && strcmp(argv[3],"23") <= 0) )
+    6)      if (pattern_check(argv[4]) == 1)
+             service_maker(argv[1], argv[2], argv[3], argv[4]);
+     
+}
+```
+Pertama kita melakukan input melalui argumen pada terminal, pada c kita menambahkan **int argc** sebagai penampung banyaknya argumen pada terminal dan **char \*\*argv** sebagai array dari setiap argumen (dipisahkan dengan spasi untuk setiap insert nya) contoh nya ./program \* 34 7 /home/somi/test.sh maka :
+1)./program adalah isi dari argv[0]
+2) \* adalah isi dari argv[1] 
+3) 34 adalah isi dari argv[2]
+4) 7 adalah isi dari argv[3]
+5) /home/somi/test.sh adalah isi dari argv[4]
+kemudian  dilakukan pengecekan pertama untuk yang nomor 1) yaitu jika argumen-1 yang diberikan > 4 atau argumen-1 yang diberikan < 4 maka akan mencetak "Terjadi kesalahan input", argc -1 kami anggap dikurangi dengan ./program nya.
+Ketika program program sukses melewati pengecekan pertama lalu lanjut ke :
+1 ) pengecekan kedua ( pada no 2) ) yaitu  melakukan cek ke argumen ke 1 (bagian detik) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 59 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "59" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 59) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 1".
+2 ) pengecekan ketiga ( pada no 3) ) dengan syarat pengecekan kedua berhasil, yaitu  melakukan cek ke argumen ke 2 (bagian menit) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 59 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "59" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 59) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 2".
+3 ) pengecekan keempat ( pada no 4) ) dengan syarat pengecekan ketiga berhasil, yaitu  melakukan cek ke argumen ke 3 (bagian jam) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 23 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "23" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 23) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 3".
+4 ) Ketika argumen ke 1, 2, dan 3 mendapat input huruf atau kata sudah pasti gagal karena ascii minimum untuk huruf kecil adalah 97 dan huruf besar 65 ( otomatis melebihi ) sedangkan maksimum hanya 59. 
+5 ) pengecekan terakhir ( pada no 5) ) dengan syarat pengecekan keempat berhasil, yaitu melakukan cek ke argumen ke 4 (bagian path) dengan kondisi input akan dipassing pada fungsi :
+```c
+pattern_check(argv[4]) //isinya
+pattern_check(char *paths){
+	1) FILE *file;
+    2) if ((file = fopen(paths, "r")))
+	   {
+    3)    fclose(file);
+    4)    return 1;
+	   }
+    5) return 0;
+}
+```
+kami menggunakan FILE *file default
+**Screenshot Run :** 
 <hr>
 
 **soal 2 :** 
