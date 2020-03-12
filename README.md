@@ -450,6 +450,33 @@ int main() {
 ```
 
 **Penjelasan :**
+Pada program ini digunakan beberapa fungsi yaitu 
+```c
+int is_dir(const char* path) {
+    struct stat buf;
+    stat(path, &buf);
+    return S_ISDIR(buf.st_mode);
+}
+```
+Fungsi tersebut digunakan untuk mengecek apakah sebuah string path merupakan sebuah directory atau bukan. Mengecek string path tersebut dengan bantuan ``struct stat``. Dengan ``sys/stat.h`` libray mendefinisikan sebuah macro S_ISDIR(), yang digunakan untuk mengecek keberadaan directory. Macro ini menggunakan ``stat.st_mode`` parameter dan mengembalikan sebuah nilai integer bukan nol jika string path yang diberikan merupakan directory. Sebaliknya, jika string path yang dipassing bukan merupakan directory maka akan mereturn nilai nol.
+
+Selain itu fungsi lain yang digunakan
+```c
+void subv(char *path, char * const argv[])
+{
+    int ret;
+    pid_t a_pid = fork();
+    if (a_pid == -1) return;
+    if (a_pid != 0) 
+    { 
+        wait(&ret); 
+        return; 
+    }
+    execv(path, argv);
+}
+```
+Yaitu fungsi subv dengan parameter string path dan argumen untuk digunakan nanti pada ``execv``. Fungsi ini sama dengan fungsi untuk membuat proses baru dimana saat pembuatan proses gagal ataupun proses masih ada di parent fungsi ini tidak mereturn apa apa. selain itu fungsi ini akan menjalankan ``execv`` dengan parameter string path serta argumen yang sudah dipassing di fungsi ini saat dipanggil
+
 ```c
 while ((de = readdir(dr)) != NULL){ 
         char temp[100] = "\0";
