@@ -6,6 +6,20 @@
 #include <dirent.h>
 #include <string.h> 
 
+#include <sys/stat.h>
+
+int is_file(const char* path) {
+    struct stat buf;
+    stat(path, &buf);
+    return S_ISREG(buf.st_mode);
+}
+
+int is_dir(const char* path) {
+    struct stat buf;
+    stat(path, &buf);
+    return S_ISDIR(buf.st_mode);
+}
+
 void subv(char *path, char * const argv[])
 {
     int ret;
@@ -31,7 +45,7 @@ int main() {
 
     if (child_id == 0) {
         // this is child  
-        char *argv[] = {"mkdir", "-p", "/home/syubban/modul2/indomie", NULL};
+        char *argv[] = {"mkdir", "-p", "/home/iqbaal/praktikum2/indomie", NULL};
         execv("/bin/mkdir", argv);
     } else {
         // this is parent
@@ -46,7 +60,7 @@ int main() {
         }
 
         if (other_child == 0){
-            char *argv[] = {"mkdir", "-p", "/home/syubban/modul2/sedaap", NULL};
+            char *argv[] = {"mkdir", "-p", "/home/iqbaal/praktikum2/sedaap", NULL};
             execv("/bin/mkdir", argv);
         }else{
             while(wait(&second_status) > 0);
@@ -59,14 +73,14 @@ int main() {
             }
 
             if(another_childs == 0){
-                char *argvs[] = {"unzip", "/home/syubban/modul2/jpg.zip", "-d", "/home/syubban/modul2/", NULL};
+                char *argvs[] = {"unzip", "/home/iqbaal/praktikum2/jpg.zip", "-d", "/home/iqbaal/praktikum2/", NULL};
                 execv("/usr/bin/unzip", argvs);
             }else{
                 while(wait(&another_status) > 0);
                 struct dirent *de;  // Pointer for directory entry 
   
                 // opendir() returns a pointer of DIR type.  
-                DIR *dr = opendir("/home/syubban/modul2/jpg"); 
+                DIR *dr = opendir("/home/iqbaal/praktikum2/jpg"); 
   
                 if (dr == NULL)  // opendir returns NULL if couldn't open directory 
                 { 
@@ -77,12 +91,27 @@ int main() {
                 // Refer http://pubs.opengroup.org/onlinepubs/7990989775/xsh/readdir.html 
                 // for readdir() 
                 while ((de = readdir(dr)) != NULL){ 
-                    // printf("%s\n", de->d_name);
                     char temp[100] = "\0";
-                    strcpy(temp, "/home/syubban/modul2/jpg/");
+                    strcpy(temp, "/home/iqbaal/praktikum2/jpg/");
                     strcat(temp, de->d_name);
-                    char *argss[] = {"mv", temp, "/home/syubban/modul2/indomie/", NULL};
-                    execv("/bin/mv", argss); 
+                    char a[50];
+                    char b[50];
+                    strcpy(a, "/home/iqbaal/praktikum2/jpg/..");
+                    strcpy(b, "/home/iqbaal/praktikum2/jpg/.");
+                    if(strcmp(temp,a)==0 || strcmp(temp,b)==0)
+                    {
+                        continue;
+                    }
+                    if(is_dir(temp))
+                    {
+                        char *argss[] = {"mv", temp, "/home/iqbaal/praktikum2/indomie/", NULL};
+                        subv("/bin/mv", argss); 
+                    }
+                    else
+                    {
+                        char *argss[] = {"mv", temp, "/home/iqbaal/praktikum2/sedaap/", NULL};
+                        subv("/bin/mv", argss); 
+                    }
                 }
                 closedir(dr);
             }
