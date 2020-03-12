@@ -23,194 +23,10 @@ Program dengan argumen seperti contoh di atas akan menjalankan script test.sh se
 detik pada jam 07:34.
 
 **Source Code :**
-```c
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <syslog.h>
-#include <string.h>
-#include <regex.h>
-#include <time.h>
-#include <sys/wait.h>
 
-void subv(char *path, char * const argv[])
-{
-    int ret;
-    pid_t a_pid = fork();
-    if (a_pid == -1) return;
-    if (a_pid != 0) 
-    { 
-        wait(&ret); 
-        return; 
-    }
-    execv(path, argv);
-}
-
-void service_maker(char * second, char * minutes, char * hour, char * path_file){
-    while (1) {
-        time_t times;
-        struct tm* tm_info;  
-        times = time(NULL);
-        tm_info = localtime(&times);
-        char skrg_jam[5];
-        sprintf(skrg_jam,"%d", tm_info->tm_hour);
-        char skrg_menit[5]; 
-        sprintf(skrg_menit, "%d", tm_info->tm_min);
-        char skrg_detik[5];
-        sprintf(skrg_detik, "%d", tm_info->tm_sec);
-        if( strcmp(hour, "*")==0)
-        {
-            if(strcmp(minutes,"*") == 0)
-            {
-                if(strcmp(second,"*")==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-                else if(strcmp(skrg_detik, second)==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-            }
-            else if(strcmp(skrg_menit, minutes))
-            {
-                if(strcmp(second, "*")==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-                else if(strcmp(skrg_detik,second)==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-            }
-        }
-        else if( strcmp(hour,skrg_jam)==0)
-        {
-            if(strcmp(minutes,"*") == 0)
-            {
-                if(strcmp(second,"*")==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-                else if(strcmp(skrg_detik,path_file)==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-            }
-            else if(strcmp(skrg_menit, minutes)==0)
-            {
-                if(strcmp(second,"*")==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-                else if(strcmp(skrg_detik,second)==0)
-                {
-                    char *args[] = {"bash", path_file, NULL};
-                    subv("/bin/bash", args);
-                }
-             }
-        }   
-        sleep(1);
-    }
-}
-
-int pattern_check(char * paths){
-    FILE *file;
-    if ((file = fopen(paths, "r")))
-    {
-        fclose(file);
-        return 1;
-    }
-    return 0;
-}
-
-int main(int argc, char **argv){
-    if (argc-1 > 4 || argc-1 < 4){
-        printf("Terjadi kesalahan input\n");
-    }else{
-        if ( (strcmp(argv[1], "*") == 0) || (strcmp(argv[1], "0") >= 0 && strcmp(argv[1],"59") <= 0) ){
-            if ( (strcmp(argv[2], "*") == 0) || (strcmp(argv[2], "0") >= 0 && strcmp(argv[2],"59") <= 0) ){
-                if ( (strcmp(argv[3], "*") == 0) || (strcmp(argv[3], "0") >= 0 && strcmp(argv[3],"23") <= 0) ){
-                    if (pattern_check(argv[4]) == 1){
-                        service_maker(argv[1], argv[2], argv[3], argv[4]);
-                    }else{
-                        printf("Terjadi kesalahan pada argumen 4\n");    
-                    }
-                }else{
-                    printf("Terjadi kesalahan pada argumen 3\n");    
-                }
-            }else{
-                printf("Terjadi kesalahan pada argumen 2\n");    
-            }
-        }else{
-            printf("Terjadi kesalahan pada argumen 1\n");
-        }
-    }
-    return 0;
-}
-
-```
 **Penjelasan :**
-```c
-int main(int argc, char **argv){
-    1) if (argc-1 > 4 || argc-1 < 4){
-        printf("Terjadi kesalahan input\n");
-    2) else{
-    3)   if ( (strcmp(argv[1], "*") == 0) || (strcmp(argv[1], "0") >= 0 && strcmp(argv[1],"59") <= 0) )
-    4)    if ( (strcmp(argv[2], "*") == 0) || (strcmp(argv[2], "0") >= 0 && strcmp(argv[2],"59") <= 0) )
-    5)     if ( (strcmp(argv[3], "*") == 0) || (strcmp(argv[3], "0") >= 0 && strcmp(argv[3],"23") <= 0) )
-    6)      if (pattern_check(argv[4]) == 1)
-             service_maker(argv[1], argv[2], argv[3], argv[4]);
-     
-}
-```
-Pertama kita melakukan input melalui argumen pada terminal, pada c kita menambahkan **int argc** sebagai penampung banyaknya argumen pada terminal dan **char \*\*argv** sebagai array dari setiap argumen (dipisahkan dengan spasi untuk setiap insert nya) contoh nya ./program \* 34 7 /home/somi/test.sh maka :
-1)./program adalah isi dari argv[0]
-2) \* adalah isi dari argv[1] 
-3) 34 adalah isi dari argv[2]
-4) 7 adalah isi dari argv[3]
-5) /home/somi/test.sh adalah isi dari argv[4]
-kemudian  dilakukan pengecekan pertama untuk yang nomor 1) yaitu jika argumen-1 yang diberikan > 4 atau argumen-1 yang diberikan < 4 maka akan mencetak "Terjadi kesalahan input", argc -1 kami anggap dikurangi dengan ./program nya.
-Ketika program program sukses melewati pengecekan pertama lalu lanjut ke :
 
-1 ) pengecekan kedua ( pada no 2) ) yaitu  melakukan cek ke argumen ke 1 (bagian detik) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 59 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "59" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 59) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 1".
-
-2 ) pengecekan ketiga ( pada no 3) ) dengan syarat pengecekan kedua berhasil, yaitu  melakukan cek ke argumen ke 2 (bagian menit) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 59 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "59" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 59) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 2".
-
-3 ) pengecekan keempat ( pada no 4) ) dengan syarat pengecekan ketiga berhasil, yaitu  melakukan cek ke argumen ke 3 (bagian jam) dengan kondisi input akan diterima ketika sama dengan "*" atau diantara 0 dan 23 dengan membandingkan (strcmp) input dengan karakter 0 dan 59. Ketika hasil strcmp dengan "0" >= 0 (0 sendiri atau 1, ketika -1 maka itu kurang dari 0) maka input dianggap benar dengan batasan strcmp dengan "23" <= 0 (hasil strcmp diterima ketika 0 atau -1, ketika 1 maka itu melebihi 23) . Jika tidak memenuhi salah satu dari kedua pengecekan maka akan output "Terjadi kesalahan pada argumen 3".
-
-4 ) Ketika argumen ke 1, 2, dan 3 mendapat input huruf atau kata sudah pasti gagal karena ascii minimum untuk huruf kecil adalah 97 dan huruf besar 65 ( otomatis melebihi ) sedangkan maksimum hanya 59.
-
-5 ) pengecekan terakhir ( pada no 5) ) dengan syarat pengecekan keempat berhasil, yaitu melakukan cek ke argumen ke 4 (bagian path) dengan kondisi input akan dipassing pada fungsi :
-```c
-pattern_check(argv[4]) //isinya
-pattern_check(char *paths){
-	1) FILE *file;
-    2) if ((file = fopen(paths, "r")))
-	   {
-    3)    fclose(file);
-    4)    return 1;
-	   }
-    5) return 0;
-}
-```
-kami menggunakan FILE \*file yaitu pointer bertipe FILE default milik c untuk mengakses file, kemudian dilakukan pengecekan lagi pada if dengan kondisi file = fopen(paths, "r"). Kondisi tersebut akan mengembalikan nilai 1 atau true ketika file yang dibuka dengan metode r (membaca atau bisa dengan yang lain) ada dan sebaliknya jika tidak ada akan 0 atau false. Lalu ketika benar maka kita close filenya lalu langsung mengembalikan nilai 1. 
-Ketika pengecekan terakhir benar maka akan lanjut ke fungsi berikut untuk membuat cron daemon :
-```c
-service_maker(argv[1], argv[2], argv[3], argv[4]);
-```
-
-**Screenshot Run :** 
+**Screenshot Run :**
 <hr>
 
 **soal 2 :** 
@@ -474,5 +290,74 @@ Perintah tersebut yaitu dilakukan perulangan dengan membaca semua setiap isi (fi
 ```
 Untuk kode tersebut dideklarasikan string a dan string b dimana string a ini memuat path ``/home/iqbaal/praktikum2/jpg/.`` dan ``/home/iqbaal/praktikum2/jpg/..`` dimana pada kedua directory tersebut dilakukan pengecualian sehingga tidak dilakukan apa-apa. Hal tersebut akan jalan ketika perbandingan antara string a atau b dengan string path temp bernilai 0, dilakukan ``continue`` agar langsung masuk ke perulangan selanjutnya
 
+```c
+    if(is_dir(temp))
+    {
+        pid_t next_childs;
+        int next_status;
+        next_childs = fork();
+```
+Pada kode tersebut dicek apakah isi dari ``/home/iqbaal/praktikum2/jpg/.`` merupakan file atau directory dengan fungsi ``is_dir`` dan parameter string path ``temp`` dan jika isi tersebut merupakan directory maka dibuat lagi process anak baru dengan pid ``next_childs``
+
+```c
+       if (next_childs < 0)
+        {
+            exit(EXIT_FAILURE);
+        }
+        if(next_childs == 0)
+        {
+            char *argss[] = {"mv", temp, "/home/iqbaal/praktikum2/indomie/", NULL};
+            subv("/bin/mv", argss);
+        }
+```
+Pada kode tersebut dicek apakah pembuatan proses baru berhasil, jika ternyata berhasil maka directory tersebut akan dipindah ke ``/home/iqbaal/praktikum2/indomie/`` dengan menggunakan fungsi subv dan argumen yang dimasukkan yaitu selain perintah ``mv`` yaitu string temp sebagai directory asal dan ``/home/iqbaal/praktikum2/indomie/`` sebagai directory tujuan
+
+```c
+        else
+        {
+            while(wait(&next_status) > 0);
+            pid_t next_gen_childs;
+            int next_gen_status;              
+            char aa[50];
+            strcpy(aa,"/home/iqbaal/praktikum2/indomie/");
+            strcat(aa, de->d_name);
+            strcat(aa,"/coba1.txt");
+            char bb[50];
+            strcpy(bb,"/home/iqbaal/praktikum2/indomie/");
+            strcat(bb, de->d_name);
+            strcat(bb,"/coba2.txt");
+            next_gen_childs = fork();
+```
+Ketika ternyata proses masih ada di parent dilakukan perintah di atas, dimana perintah  ``while(wait(&next_status) > 0);`` digunakan untuk menunggu anak menyelesaikan prosesnya (memindahkan ke directory indomie) kemudian dideklarasikan pid baru ``next_gen_childs`` untuk nantinya digunakan membuat proses baru lagi. Setelah itu dideklarasikan dua string baru ``aa`` dan ``bb`` untuk nantinya menyimpan string path file yang akan dimasukkan ke directory. Setelah itu 
+``strcpy(aa,"/home/iqbaal/praktikum2/indomie/");`` digunakan untuk meletakkan string path ``/home/iqbaal/praktikum2/indomie/`` ke string ``aa``, ``strcat(aa, de->d_name);`` digunakan untuk meng-append nama directory yang akan diisi ke string aa. Dan ``strcat(aa,"/coba1.txt");`` digunakan untuk meng-append nama file ke string aa. Hal yang sama juga dilakukan untuk string ``bb``. Dimana perbedaannya string ``bb`` digunakan untuk file ``coba2.txt``. Setelah itu baru dilakukan fork() untuk membuat proses baru
+
+```c
+           if (next_gen_childs < 0)
+            {
+                exit(EXIT_FAILURE);
+            }
+
+            if(next_gen_childs == 0)
+            {
+                char *argss[] = {"touch", aa, NULL};
+                execv("/bin/touch", argss);
+            }
+            else
+            {
+                while(wait(&next_gen_status) > 0);
+                sleep(3);
+                char *argss[] = {"touch", bb, NULL};
+                execv("/bin/touch", argss);
+            }
+```
+Setelah itu dilakukan pengecekan lagi proses baru tersebut berhasil dibuat atau tidak. Jika berhasil atau ``next_gen_childs == 0`` maka dilakukan perintah ``touch`` dengan ``execv`` untuk membuat file ``coba1.txt`` dengan parameter yang digunakan perintah ``touch`` sendiri dan string ``aa`` yang berisi path tujuan pembuatan file ``coba1.txt``. Namun jika ternyata pid masih ada di parent, maka dilakukan perintah di bagian ``else`` tersebut dimana ``while(wait(&next_gen_status) > 0);`` digunakan untuk menunggu proses anak selesai (membuat file coba1). ``sleep(3)`` digunakan untuk mendelay proses pada parent selama 3 detik sesuai ketentuan soal dan kemudian baru dibuat file ``coba2.txt`` dengan bantuan perintah ``touch`` dengan ``execv`` dengan parameter yang digunakan perintah ``touch`` sendiri dan string ``bb`` yang berisi path tujuan pembuatan file ``coba2.txt``.
+```c
+    else
+    {
+        char *argss[] = {"mv", temp, "/home/iqbaal/praktikum2/sedaap/", NULL};
+        subv("/bin/mv", argss); 
+    }
+```
+Sedangkan perintah terakhir diatas digunakan ketika isi dari directory ``/home/iqbaal/praktikum2/jpg/`` adalah file bukan directory sehingga dilakukan pemindahan file tersebut ke folder ``/home/iqbaal/praktikum2/sedaap/`` dengan bantuan ``execv`` dengan parameter yang digunakan yaitu perintah ``mv`` , ``temp`` sebagai string path file yang akan dipindah dan ``/home/iqbaal/praktikum2/sedaap/`` sebagai directory tujuan.
 **Screenshot Run :**
 <hr>
