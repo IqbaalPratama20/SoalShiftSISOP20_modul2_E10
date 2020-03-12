@@ -204,7 +204,11 @@ pattern_check(char *paths){
     5) return 0;
 }
 ```
-kami menggunakan FILE *file default
+kami menggunakan FILE \*file yaitu pointer bertipe FILE default milik c untuk mengakses file, kemudian dilakukan pengecekan lagi pada if dengan kondisi file = fopen(paths, "r"). Kondisi tersebut akan mengembalikan nilai 1 atau true ketika file yang dibuka dengan metode r (membaca atau bisa dengan yang lain) ada dan sebaliknya jika tidak ada akan 0 atau false. Lalu ketika benar maka kita close filenya lalu langsung mengembalikan nilai 1. 
+Ketika pengecekan terakhir benar maka akan lanjut ke fungsi berikut untuk membuat cron daemon :
+```c
+service_maker(argv[1], argv[2], argv[3], argv[4]);
+```
 
 **Screenshot Run :** 
 <hr>
