@@ -23,7 +23,7 @@ Program dengan argumen seperti contoh di atas akan menjalankan script test.sh se
 detik pada jam 07:34.
 
 **Source Code :**
-```
+```c
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
