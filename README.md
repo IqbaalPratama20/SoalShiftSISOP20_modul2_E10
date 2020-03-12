@@ -205,6 +205,107 @@ pattern_check(char *paths){
     5) return 0;
 }
 ```
+Fungsi lain yang digunakan pada program ini yaitu fungsi service_maker yang akan dipanggil ketika semua argumen yang dimasukkan sesuai format
+```c
+void service_maker(char * second, char * minutes, char * hour, char * path_file){
+    while (1) {
+        time_t times;
+        struct tm* tm_info;  
+        times = time(NULL);
+        tm_info = localtime(&times);
+        char skrg_jam[5];
+        sprintf(skrg_jam,"%d", tm_info->tm_hour);
+        char skrg_menit[5]; 
+        sprintf(skrg_menit, "%d", tm_info->tm_min);
+        char skrg_detik[5];
+        sprintf(skrg_detik, "%d", tm_info->tm_sec);
+        if( strcmp(hour, "*")==0)
+        {
+            if(strcmp(minutes,"*") == 0)
+            {
+                if(strcmp(second,"*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik, second)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+            }
+            else if(strcmp(skrg_menit, minutes))
+            {
+                if(strcmp(second, "*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik,second)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+            }
+        }
+        else if( strcmp(hour,skrg_jam)==0)
+        {
+            if(strcmp(minutes,"*") == 0)
+            {
+                if(strcmp(second,"*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik,path_file)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+            }
+            else if(strcmp(skrg_menit, minutes)==0)
+            {
+                if(strcmp(second,"*")==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+                else if(strcmp(skrg_detik,second)==0)
+                {
+                    char *args[] = {"bash", path_file, NULL};
+                    subv("/bin/bash", args);
+                }
+             }
+        }   
+        sleep(1);
+    }
+}
+```
+Parameter yang digunakan pada fungsi ini yaitu string ``hour``,``minutes``,``second`` serta string path file bash yang akan dijalankan. 
+```c
+while (1) {
+        time_t times;
+        struct tm* tm_info;  
+        times = time(NULL);
+        tm_info = localtime(&times);
+        char skrg_jam[5];
+        sprintf(skrg_jam,"%d", tm_info->tm_hour);
+        char skrg_menit[5]; 
+        sprintf(skrg_menit, "%d", tm_info->tm_min);
+        char skrg_detik[5];
+        sprintf(skrg_detik, "%d", tm_info->tm_sec);
+```
+Kode diatas yaitu menggunakan while karena program yang dibuat ini seperti crontab sehingga akan dilakukan terus menerus. Variabel ``time_t times``,``struct tm* tm_info`` yang ada pada library ``time.h`` nantinya akan digunakan untuk mendapatkan waktu yang ada pada komputer.  ``times = time(NULL);`` digunakan untuk mengkalkulasi waktu kalender sekarang dan memasukkannya ke format ``times``. Kemudian `` tm_info = localtime(&times);`` digunakan untuk memasukkan nilai ``times`` ke format struct  ``* tm_info`` . Kemudian
+```c
+	char skrg_jam[5];
+        sprintf(skrg_jam,"%d", tm_info->tm_hour);
+        char skrg_menit[5]; 
+        sprintf(skrg_menit, "%d", tm_info->tm_min);
+        char skrg_detik[5];
+        sprintf(skrg_detik, "%d", tm_info->tm_sec);
+```
+digunakan untuk mengubah masing-masing nilai integer jam,menit,detik pada struct ``*tm_info`` ke ``string skrg_jam``, ``skrg_menit`` dan ``skrg_detik`` menggunakan bantuan fungsi ``sprintf``
+
 kami menggunakan FILE *file default
 **Screenshot Run :** 
 <hr>
