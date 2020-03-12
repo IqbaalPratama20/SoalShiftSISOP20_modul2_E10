@@ -107,8 +107,6 @@ Catatan :
 - Direktori “.” dan “..” tidak termasuk
 
 **Source Code :**
-
-**Penjelasan :**
 ```c
 #include <stdlib.h>
 #include <sys/types.h>
@@ -270,6 +268,9 @@ int main() {
     }
 }
 ```
+
+**Penjelasan :**
+
 
 **Screenshot Run :**
 <hr>
