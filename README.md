@@ -160,6 +160,7 @@ int main(int argc, char **argv){
 }
 
 ```
+
 **Penjelasan :**
 ```c
 int main(int argc, char **argv){
@@ -207,6 +208,7 @@ pattern_check(char *paths){
 kami menggunakan FILE *file default
 **Screenshot Run :** 
 <hr>
+
 **soal 2 :** 
 Shisoppu mantappu! itulah yang selalu dikatakan Kiwa setiap hari karena sekarang dia
 merasa sudah jago materi sisop. Karena merasa jago, suatu hari Kiwa iseng membuat
