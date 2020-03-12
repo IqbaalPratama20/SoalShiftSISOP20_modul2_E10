@@ -368,7 +368,9 @@ if( strcmp(hour, "*")==0)
 ```
 Kode tersebut digunakan untuk mengecek apakah argumen ketiga (hour) yang dimasukkan merupakan ``*`` atau sama dengan jam waktu saat itu yang ada di string ``skrg_jam``, kemudian dilakukan lagi pengecekan apakah argumen kedua (minutes) yang dimasukkan merupakan ``*`` atau sama dengan menit waktu saat itu yang ada di string ``skrg_menit``. Setelah itu dilakukan pengecekan lagi apakah argumen pertama (second) yang dimasukkan sama dengan ``*`` atau sama dengan menit waktu saat itu yang ada di string ``skrg_detik``. Jika memenuhi kondisi-kondisi tersebut akan dipanggil fungsi ``subv`` untuk mengeksekusi bash pada string path_file yang ada pada argumen terakhir inputan. 
 
-Di dalam program ini terdapat fungsi
+Selanjutnya kode  ``sleep(1);`` yang terletak di dalam ``while(1)`` mengisyaratkan bahwa fungsi tersebut setiap berjalan akan melakukan delay 1 detik. Sehingga setiap 1 detik fungsi ini akan melakukan penyocokan antara waktu di argumen dengan waktu saat itu
+
+Di dalam program ini juga terdapat fungsi
 ```c
 void subv(char *path, char * const argv[])
 {
