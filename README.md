@@ -359,5 +359,6 @@ Setelah itu dilakukan pengecekan lagi proses baru tersebut berhasil dibuat atau 
     }
 ```
 Sedangkan perintah terakhir diatas digunakan ketika isi dari directory ``/home/iqbaal/praktikum2/jpg/`` adalah file bukan directory sehingga dilakukan pemindahan file tersebut ke folder ``/home/iqbaal/praktikum2/sedaap/`` dengan bantuan ``execv`` dengan parameter yang digunakan yaitu perintah ``mv`` , ``temp`` sebagai string path file yang akan dipindah dan ``/home/iqbaal/praktikum2/sedaap/`` sebagai directory tujuan.
+
 **Screenshot Run :**
 <hr>
