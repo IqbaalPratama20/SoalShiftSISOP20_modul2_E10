@@ -702,8 +702,55 @@ Pada kode tersebut dicek apakah isi dari ``/home/iqbaal/praktikum2/jpg/.`` merup
             subv("/bin/mv", argss);
         }
 ```
-Pada kode tersebut dicek apakah pembuatan proses baru berhasil, jika ternyata berhasil maka directory tersebut akan dipindah ke ``/home/iqbaal/praktikum2/indomie/`` dengan menggunakan fungsi subv dan argumen yang dimasukkan yaitu selain perintah ``mv`` yaitu string temp sebagai directory asal dan ``/home/iqbaal/praktikum2/indomie/`` sebagai directory tujuan
+Pada kode tersebut dicek apakah pembuatan proses baru berhasil, jika ternyata berhasil maka directory tersebut akan dipindah ke ``/home/iqbaal/praktikum2/indomie/`` dengan menggunakan fungsi subv dan argumen yang dimasukkan yaitu selain perintah ``mv`` yaitu string temp sebagai directory asal dan ``/home/iqbaal/praktikum2/indomie/`` sebagai directory tujuan. Pada potongan kode berikut, kita membuat dua folder indomie dan sedaap secara konkuren namun,
+```c
+if (child_id == 0) {
+        // this is child  
+        char *argv[] = {"mkdir", "-p", "/home/iqbaal/praktikum2/indomie", NULL};
+        execv("/bin/mkdir", argv);
+} else {
+	sleep(5);
+	while ((wait(&status)) > 0);
+        pid_t other_child;
+        int second_status;
+        other_child = fork();
+        
+        if (other_child < 0){
+            exit(EXIT_FAILURE);
+        }
 
+        if (other_child == 0){
+            char *argv[] = {"mkdir", "-p", "/home/iqbaal/praktikum2/sedaap", NULL};
+            execv("/bin/mkdir", argv);
+}
+```
+akan diberi jeda selama 5 detik untuk melakukan pembuatan folder sedaap pada child (other_child) dan secara bersamaan juga pada parent parent dari other_child akan melakukan unzip dan pemindahan folder. Potongan kode parent tersebut adalah :
+```c
+	while(wait(&second_status) > 0);
+            pid_t another_childs;
+            int another_status;
+            another_childs = fork();
+        
+        if (another_childs < 0){
+                exit(EXIT_FAILURE);
+        }
+	if(another_childs == 0){
+               char *argvs[] = {"unzip", "/home/iqbaal/praktikum2/jpg.zip", "-d", "/home/iqbaal/praktikum2/", NULL};
+               execv("/usr/bin/unzip", argvs);
+        }else{
+               while(wait(&another_status) > 0);
+               struct dirent *de;  // Pointer for directory entry 
+  
+               // opendir() returns a pointer of DIR type.  
+               DIR *dr = opendir("/home/iqbaal/praktikum2/jpg"); 
+  
+               if (dr == NULL)  // opendir returns NULL if couldn't open directory 
+               { 
+                   printf("Could not open current directory" ); 
+                   return 0; 
+               } 
+```
+Ketika sudah masuk parent process, kita lakukan forking lagi untuk membentuk dua proses yang konkuren yaitu pada child dilakukan unzip dan pada parent dari another_child dilakukan pemindahan folder. Untuk melakukan deteksi folder pada c dapat digunakan built in function dan struct yaitu dirent \*de (untuk pointer yang menunjuk direktori). Lalu kita membuka direktori dan sub direktorinya dengan DIR \*dr lalu diinisiasi dengan opendir(). Ketika \*de null (tidak menunjuk apapun) maka program akan return 0, ketika berhasil maka kita lakukan perulangan sampai subdirektorinya habis. Untuk proses pemindahannya dilakukan dengan potongan kode seperti berikut.
 ```c
         else
         {
