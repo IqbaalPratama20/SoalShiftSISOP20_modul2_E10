@@ -30,11 +30,11 @@ void killer(char *asiap)
     fp = fopen("/home/iqbaal/praktikum2/killer", "w+");
     if(strcmp(asiap,"-a")==0)
     {
-        fprintf(fp,"#!/bin/bash\nkill -9 -%d\nrm $0", getpid());
+        fprintf(fp,"#!/bin/bash\nkill -9 %d\nrm -- \"$0\"", getpid());
     }
     else if(strcmp(asiap,"-b")==0)
     {
-        fprintf(fp,"#!/bin/bash\nkill %d\nrm $0", getpid());
+        fprintf(fp,"#!/bin/bash\nkill %d\nrm -- \"$0\"", getpid());
     }
     else
     {
@@ -137,6 +137,8 @@ int main(int argc, char ** argv)
                     subv("/usr/bin/wget", args);
                     sleep(5);
                 }
+                char asiap[50];
+                strcat(asiap, dest);
                 char *args[] = {"zip", "-r", dest, dest, NULL};
                 char *arglp[]= { "rm", "-r", dest, NULL};
                 subv("/usr/bin/zip", args);
