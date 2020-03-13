@@ -133,7 +133,7 @@ int main(int argc, char ** argv)
                     sprintf(str,"%d", waktu);
                     strcpy(web,"https://picsum.photos/");
                     strcat(web, str);
-                    char *args[] = {"wget", "-qO",b, web, NULL};
+                    char *args[] = {"wget", "-O",b, web, NULL};
                     subv("/usr/bin/wget", args);
                     sleep(5);
                 }
