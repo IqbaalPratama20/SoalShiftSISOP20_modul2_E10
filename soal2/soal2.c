@@ -116,7 +116,7 @@ int main(int argc, char ** argv)
             }
             if (child_next == 0) 
             {
-                for(int i=0;i<3;i++)
+                for(int i=0;i<20;i++)
                 {
                     char a[50];
                     char str[100];
@@ -137,8 +137,6 @@ int main(int argc, char ** argv)
                     subv("/usr/bin/wget", args);
                     sleep(5);
                 }
-                char asiap[50];
-                strcat(asiap, dest);
                 char *args[] = {"zip", "-r", dest, dest, NULL};
                 char *arglp[]= { "rm", "-r", dest, NULL};
                 subv("/usr/bin/zip", args);
@@ -147,7 +145,7 @@ int main(int argc, char ** argv)
             } 
             else 
             {
-                sleep(20);    
+                sleep(30);    
             }
         }
     }
