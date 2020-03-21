@@ -629,6 +629,89 @@ Pada soal diberikan ketentuan ketika menjalankan file harus ditambah argumen -a 
 next) close(STDERR_FILENO);
 ```
 Selanjutnya program akan didetach dari terminal, maksudnya program berjalan dilatar belakang dengan menggunakan daemon proses, kode pembuatnya berada pada nomor 2) sampai next).
+```c
+void killer(char *asiap)
+{
+    FILE *fp;
+    fp = fopen("/home/iqbaal/praktikum2/killer", "w+");
+    if(strcmp(asiap,"-a")==0)
+    {
+        fprintf(fp,"#!/bin/bash\nkill -9 %d\nrm -- \"$0\"", getpid());
+    }
+    else if(strcmp(asiap,"-b")==0)
+    {
+        fprintf(fp,"#!/bin/bash\nkill %d\nrm -- \"$0\"", getpid());
+    }
+    else
+    {
+        printf("Argumen yang dimasukkan kurang tepat");
+        exit(1);
+    }
+    
+    char *argv[]={"chmod", "+x", "/home/iqbaal/praktikum2/killer", NULL};
+    subv("/bin/chmod", argv);
+    fclose(fp);
+}
+```
+Kode diatas yaitu dalam pembuatan program killer. Dimana parameter yang digunakan yaitu mode argumen inputan. Disini menggunakan tipe FILE yaitu dimana dibuat sebuah file dengan path `/home/iqbaal/praktikum2/killer` yang dapat diedit isinya. Kemudian dibandingkan argumen yang dimasukkan. Jika argumen `-a` maka yang ditulis di file tersebut kode bash untuk mengkill seluruh proses yang ada yaitu dengan `kill -9 -(PID)` dan tidak lupa terdapat `rm -- "$0"` untuk menghapus file program tersebut setelah dieksekusi. Sedangkan jika argumen `-b` maka yang ditulis dalam file tersebut adalah kode bash untuk mengkill proses yang sedang berjalan yaitu dengan `kill (PID)`dan juga terdapat `rm -- "$0"` untuk menghapus file program tersebut setelah dieksekusi. Dan setelah itu 
+```c
+char *argv[]={"chmod", "+x", "/home/iqbaal/praktikum2/killer", NULL};
+    subv("/bin/chmod", argv);
+    fclose(fp);
+```
+Kode tersebut yaitu digunakan mengubah mode dari file killer agar bisa dieksekusi yaitu dengan mengeksekusi perintah `chmod` melalui fungsi `subv` dan kemudian file tersebut ditutup.
+
+```c
+	pid_t child_id;
+        int status;
+        time_t rawtime;
+        struct tm *info;
+        char folder[80];
+        time(&rawtime);
+        info = localtime(&rawtime);
+        strftime(folder,80,"%Y-%m-%d_%X", info);
+        char dest[80];
+        strcpy(dest, "/home/iqbaal/");
+        strcat(dest,folder);
+        child_id = fork(); 
+```
+Kode tersebut digunakan untuk membuat folder dengan nama waktu sekarang dengan format yang ditentukan dalam soal. Waktu sekarang didapatkan dengan bantuan library `time.h` 
+
+```c
+		for(int i=0;i<20;i++)
+                {
+                    char a[50];
+                    char str[100];
+                    char web[100];
+                    time(&rawtime);
+                    info = localtime(&rawtime);
+                    strftime(a,50,"%Y-%m-%d_%X", info);
+                    char b[80];
+                    strcpy(b,"/home/iqbaal/");
+                    strcat(b,folder);
+                    strcat(b,"/");
+                    strcat(b, a);
+                    int waktu = ((int)time(NULL)%1000) + 100;
+                    sprintf(str,"%d", waktu);
+                    strcpy(web,"https://picsum.photos/");
+                    strcat(web, str);
+                    char *args[] = {"wget", "-O",b, web, NULL};
+                    subv("/usr/bin/wget", args);
+                    sleep(5);
+                }
+```
+Kode diatas yaitu untuk mendownload gambar sejumlah 20 dari web `picsum.photos`. Digunakan juga bantuan dari libary `time.h` untuk mendapatkan waktu sekarang dalam memberi nama file gambar yang didownload. `int waktu = ((int)time(NULL)%1000) + 100;` kode tersebut digunakan untuk mendapatkan ukuran yang diinginkan sesuai format pada soal. Dimana kemudian hasil dari kode tersebut ditambahkan dibelakang alamat web `picsum.photos/` . Kemudian file didownload dengan menggunakan perintah 	`wget -o` untuk mendownload file dengan letak output yang kita inginkan serta dengan bantuan fungsi `subv`. `sleep(5)` digunakan agar gambar didownload setiap 5 detik
+
+```c
+ 		char asiap[50];
+                strcat(asiap, dest);
+                char *args[] = {"zip", "-r", dest, dest, NULL};
+                char *arglp[]= { "rm", "-r", dest, NULL};
+                subv("/usr/bin/zip", args);
+                subv("/bin/rm", arglp);
+                exit(0);
+```
+Kod diatas digunakan untuk menzip folder kemudian menghapus folder tersebut. Digunakan bantuan perintah `zip` dan `rm` serta bantuan fungsi `subv` untuk menzip serta menghapus folder tersebut.
 
 **Screenshot Run :**
 <hr>
