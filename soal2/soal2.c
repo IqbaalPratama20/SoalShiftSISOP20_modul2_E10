@@ -30,7 +30,7 @@ void killer(char *asiap)
     fp = fopen("/home/iqbaal/praktikum2/killer", "w+");
     if(strcmp(asiap,"-a")==0)
     {
-        fprintf(fp,"#!/bin/bash\nkill -9 %d\nrm -- \"$0\"", getpid());
+        fprintf(fp,"#!/bin/bash\nkill -9 -%d\nrm -- \"$0\"", getpid());
     }
     else if(strcmp(asiap,"-b")==0)
     {
